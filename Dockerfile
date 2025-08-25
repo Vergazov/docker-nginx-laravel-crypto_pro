@@ -38,7 +38,7 @@ RUN pecl install xdebug \
 COPY config/php/xdebug.ini /usr/local/etc/php/conf.d
 
 # Настройка и установка Crypto Pro
-COPY programs /opt
+COPY programs/crypto-pro /opt
 
 RUN /opt/linux-amd64_deb/./install.sh lsb-cprocsp-devel cprocsp-pki-cades
 RUN sed -i 's|^PHPDIR *=.*|PHPDIR = /usr/local/include/php/|' /opt/phpcades/Makefile.unix
