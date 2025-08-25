@@ -6,7 +6,7 @@
 
 - make composer-install
 
-- cp .env.example .env
+- cp .env.example src/.env
 
 - make key-generate
 
