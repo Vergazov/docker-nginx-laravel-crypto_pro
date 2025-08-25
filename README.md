@@ -6,11 +6,10 @@
 
 - make composer-install
 
+- cp .env.example .env
+
 - make key-generate
 
-- cd src
-
-- cp .env.example .env
 
 ## 📃 Make command list
 
