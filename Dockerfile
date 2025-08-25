@@ -49,7 +49,6 @@ RUN eval `/opt/cprocsp/src/doxygen/CSP/../setenv.sh --64`; make -f Makefile.unix
 RUN ln -s /opt/phpcades/libphpcades.so /usr/local/lib/php/extensions/no-debug-non-zts-20230831/libphpcades.so
 RUN echo "extension=libphpcades.so" > /usr/local/etc/php/conf.d/docker-php-ext-libphpcades.ini
 
-
 # Установка composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
