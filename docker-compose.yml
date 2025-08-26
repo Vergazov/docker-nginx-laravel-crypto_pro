@@ -20,3 +20,5 @@ services:
         user: "${UID:-1000}:${GID:-1000}"
     volumes:
       - ./src:/var/www/html
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
