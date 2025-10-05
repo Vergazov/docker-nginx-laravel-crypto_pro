@@ -22,8 +22,8 @@
     build - rebuild
     composer-install - install composer dependencies
     key-generate - generate a Laravel key
-    bash-php - run bash inside a PHP container
-    bash-php-root - run bash inside the PHP container as root
+    bash - run bash inside a PHP container
+    bash-root - run bash inside the PHP container as root
     init - initiates a simple php project with autoload
 
 ## 🔧 Additional tools
