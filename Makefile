@@ -89,10 +89,10 @@ key-generate: ## Generating a laravel key
 	@echo '${GREEN}Key generation...${RESET}'
 		docker compose exec php php artisan key:generate
 
-# Инициализировать простое PHP-приложение с автозагрузкой
+# Initiates a simple php project
 .PHONY: init
-init: ## Инициализировать PHP-приложение в папке src/ внутри контейнера php
-	@echo 'Создание структуры проекта внутри контейнера...'
+init: ## Initiates a simple php project
+	@echo 'Initiates a simple php project...'
 	docker compose exec php sh -c "mkdir -p app"
 	docker compose exec php sh -c "mkdir -p public"
 	docker compose exec php sh -c 'echo "<?php\necho \"Hello from index.php!\";" > public/index.php'
