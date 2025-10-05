@@ -1,14 +1,14 @@
 # Makefile
 
-# Цвета для красивого вывода
+# Colors
 GREEN  := $(shell tput -Txterm setaf 2)
 YELLOW := $(shell tput -Txterm setaf 3)
 RESET  := $(shell tput -Txterm sgr0)
 
-# Путь к текущему Makefile
+# The path to the current Makefile
 MAKEFILE_PATH := $(abspath $(lastword $(MAKEFILE_LIST)))
 
-# Показ справки
+# Help
 .PHONY: help
 help:
 	@echo ''
@@ -25,61 +25,86 @@ help:
 	' $(MAKEFILE_PATH)
 	@echo ''
 
-# Запуск сервисов
+# Start containers
 .PHONY: up
-up: ## Запустить контейнеры
-	@echo '${GREEN}Запуск контейнеров...${RESET}'
+up: ## Start containers
+	@echo "${GREEN}Creating the src folder, if it doesn't exist...${RESET}"
+		mkdir -p src
+	@echo '${GREEN}Launching containers...${RESET}'
 		docker compose up -d
 
-# Остановка сервисов
+# Stop containers
 .PHONY: down
-down: ## Остановить контейнеры
-	@echo '${GREEN}Остановка контейнеров...${RESET}'
+down: ## Stop containers
+	@echo '${GREEN}Stopping containers...${RESET}'
 		docker compose down
 
-# Пересборка сервисов
+# Rebuilding
 .PHONY: build
-build: ## Пересобрать образы
-	@echo '${GREEN}Пересборка образов'
+build: ## Rebuilding
+	@echo '${GREEN}Creating the src folder (if it doesn't exist)...${RESET}'
+		mkdir -p src
+	@echo '${GREEN}Rebuilding'
 		docker compose up -d --build
 
-# Bash в контейнере PHP
-.PHONY: bash-php
-bash-php: ## Запустить bash внутри PHP контейнера
-	@echo '${GREEN}Запуск bash нутри PHP контейнера...${RESET}'
+# Bash in a PHP container
+.PHONY: bash
+bash-php: ## Run bash inside a PHP container
+	@echo '${GREEN}Launching bash inside a PHP container...${RESET}'
 		docker compose exec php bash
 
-# Bash в контейнере PHP под root
-.PHONY: bash-php-root
-bash-php-root: ## Запустить bash внутри PHP контейнера
-	@echo '${GREEN}Запуск bash нутри PHP контейнера...${RESET}'
+# Bash in a PHP container as root
+.PHONY: bash-root
+bash-php-root: ## Run bash as root inside a PHP container
+	@echo '${GREEN}Launching bash as root inside a PHP container...${RESET}'
 		docker compose exec -u root php bash
 
-# Установить laravel. По умолчанию последняя версия. Для установки конкретной версии необходимо передать аргумент "version"
+# Install laravel. The latest version is installed by default.
+# To install a specific version, you need to pass the "version" argument. 
+# Ex: "make laravel-install version = 10.0".
 .PHONY: laravel-install
-laravel-install: ## Установить laravel (последнюю версию по умолчанию)
-	@echo '${GREEN}Установка laravel...${RESET}'
+laravel-install: ## Install laravel (latest version by default)
+	@echo '${GREEN}Installing laravel...${RESET}'
 ifeq ($(version),)
 	docker compose exec php composer create-project laravel/laravel . --no-scripts
 else
 	docker compose exec php composer create-project "laravel/laravel:^$(version)" . --no-scripts
 endif
 
-# Установить зависимости composer
+# Install composer dependencies
 .PHONY: composer-install
-composer-install: ## Установить composer зависимости
-	@echo '${GREEN}Установка зависимостей composer...${RESET}'
+composer-install: ## Install composer dependencies
+	@echo '${GREEN}Installing composer dependencies...${RESET}'
 		docker compose exec php composer install --optimize-autoloader --prefer-dist --no-dev
 
-# Скопировать .env файл 
+# Copy the .env file
 .PHONY: env-copy
-env-copy: ## Скопировать .env файл
-	@echo '${GREEN}Копирование .env файла...${RESET}'
+env-copy: ## Copy the .env file
+	@echo '${GREEN}Copying .env file...${RESET}'
 		docker compose exec php cp .env.example .env
 
-# Генерация laravel ключа
+# Generating a laravel key
 .PHONY: key-generate
-key-generate: ## Сгенерировать Laravel ключ
-	@echo '${GREEN}Генерация ключа...${RESET}'
+key-generate: ## Generating a laravel key
+	@echo '${GREEN}Key generation...${RESET}'
 		docker compose exec php php artisan key:generate
 
+# Инициализировать простое PHP-приложение с автозагрузкой
+.PHONY: init
+init: ## Инициализировать PHP-приложение в папке src/ внутри контейнера php
+	@echo 'Создание структуры проекта внутри контейнера...'
+	docker compose exec php sh -c "mkdir -p app"
+	docker compose exec php sh -c "mkdir -p public"
+	docker compose exec php sh -c 'echo "<?php\necho \"Hello from index.php!\";" > public/index.php'
+	docker compose exec php sh -c 'echo "{\
+	\"name\": \"my/project\",\
+	\"description\": \"Simple PHP app with autoloading\",\
+	\"type\": \"project\",\
+	\"require\": {},\
+	\"autoload\": {\
+	\"psr-4\": {\
+	\"App\\\\\\\\\": \"app/\"\
+	}\
+	}\
+	}" > composer.json'
+		docker compose exec php composer install --working-dir=/var/www/html

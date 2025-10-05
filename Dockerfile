@@ -20,10 +20,10 @@ RUN apt-get update && apt-get install -y \
     libxml2-dev \
     && docker-php-ext-install pdo pdo_mysql
 
-# Создаём группу с GID
+# Create Group with GID
 RUN addgroup --gid ${GID} ava
 
-# Создаём пользователя с UID и добавляем в группу
+# Create user with UID and add in group
 RUN adduser \
     --uid ${UID} \
     --no-create-home \
@@ -37,7 +37,7 @@ RUN pecl install xdebug \
 
 COPY config/php/xdebug.ini /usr/local/etc/php/conf.d
 
-# Настройка и установка Crypto Pro, если крипто про в проекте не нужно, можно закоментировать
+# Install and configure Crypto Pro
 # COPY programs/crypto-pro /opt
 
 # RUN /opt/linux-amd64_deb/./install.sh lsb-cprocsp-devel cprocsp-pki-cades
@@ -49,7 +49,7 @@ COPY config/php/xdebug.ini /usr/local/etc/php/conf.d
 # RUN ln -s /opt/phpcades/libphpcades.so /usr/local/lib/php/extensions/no-debug-non-zts-20230831/libphpcades.so
 # RUN echo "extension=libphpcades.so" > /usr/local/etc/php/conf.d/docker-php-ext-libphpcades.ini
 
-# Установка composer
+# Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
