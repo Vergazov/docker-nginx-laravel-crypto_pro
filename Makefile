@@ -42,7 +42,7 @@ down: ## Stop containers
 # Rebuilding
 .PHONY: build
 build: ## Rebuilding
-	@echo '${GREEN}Creating the src folder (if it doesn't exist)...${RESET}'
+	@echo "${GREEN}Creating the src folder (if it doesn't exist)...${RESET}"
 		mkdir -p src
 	@echo '${GREEN}Rebuilding'
 		docker compose up -d --build
@@ -77,12 +77,12 @@ composer-install: ## Install composer dependencies
 	@echo '${GREEN}Installing composer dependencies...${RESET}'
 		docker compose exec php composer install --optimize-autoloader --prefer-dist --no-dev
 
-# Copy the .env file
+# Copy the .env file and configure session driver & DB drivers
 .PHONY: env-copy
-env-copy: ## Copy the .env file
-	@echo '${GREEN}Copying .env file...${RESET}'
-		docker compose exec php cp .env.example .env
-
+env-copy: ##  Copy .env.example to .env and set SESSION_DRIVER=file, DB_CONNECTION=mysql
+	@echo '${GREEN}Copying .env file and configuring drivers...${RESET}'
+			docker compose exec php sh -c "cp .env.example .env && sed -i 's/SESSION_DRIVER=database/SESSION_DRIVER=file/g; s/DB_CONNECTION=sqlite/DB_CONNECTION=mysql/g' .env"
+			
 # Generating a laravel key
 .PHONY: key-generate
 key-generate: ## Generating a laravel key
@@ -93,18 +93,18 @@ key-generate: ## Generating a laravel key
 .PHONY: init
 init: ## Initiates a simple php project
 	@echo 'Initiates a simple php project...'
-	docker compose exec php sh -c "mkdir -p app"
-	docker compose exec php sh -c "mkdir -p public"
-	docker compose exec php sh -c 'echo "<?php\necho \"Hello from index.php!\";" > public/index.php'
-	docker compose exec php sh -c 'echo "{\
-	\"name\": \"my/project\",\
-	\"description\": \"Simple PHP app with autoloading\",\
-	\"type\": \"project\",\
-	\"require\": {},\
-	\"autoload\": {\
-	\"psr-4\": {\
-	\"App\\\\\\\\\": \"app/\"\
-	}\
-	}\
-	}" > composer.json'
-		docker compose exec php composer install --working-dir=/var/www/html
+		docker compose exec php sh -c "mkdir -p app"
+		docker compose exec php sh -c "mkdir -p public"
+		docker compose exec php sh -c 'echo "<?php\n\nrequire_once __DIR__ . \"/../vendor/autoload.php\";\n\necho \"Hello World!\";" > public/index.php'
+		docker compose exec php sh -c 'echo "{\
+		\"name\": \"my/project\",\
+		\"description\": \"Simple PHP app with autoloading\",\
+		\"type\": \"project\",\
+		\"require\": {},\
+		\"autoload\": {\
+		\"psr-4\": {\
+		\"App\\\\\\\\\": \"app/\"\
+		}\
+		}\
+		}" > composer.json'
+			docker compose exec php composer install --working-dir=/var/www/html

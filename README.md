@@ -14,6 +14,12 @@
     
     make laravel-install version=10.0
 
+## 🔷 If Laravel is not needed
+
+    make init
+
+❗Initializes an empty php project with autoloading of classes
+
 
 ## 📃 Make command list
 
