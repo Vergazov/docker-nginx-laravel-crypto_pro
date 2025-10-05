@@ -37,17 +37,17 @@ RUN pecl install xdebug \
 
 COPY config/php/xdebug.ini /usr/local/etc/php/conf.d
 
-# Настройка и установка Crypto Pro
-COPY programs/crypto-pro /opt
+# Настройка и установка Crypto Pro, если крипто про в проекте не нужно, можно закоментировать
+# COPY programs/crypto-pro /opt
 
-RUN /opt/linux-amd64_deb/./install.sh lsb-cprocsp-devel cprocsp-pki-cades
-RUN sed -i 's|^PHPDIR *=.*|PHPDIR = /usr/local/include/php/|' /opt/phpcades/Makefile.unix
+# RUN /opt/linux-amd64_deb/./install.sh lsb-cprocsp-devel cprocsp-pki-cades
+# RUN sed -i 's|^PHPDIR *=.*|PHPDIR = /usr/local/include/php/|' /opt/phpcades/Makefile.unix
 
-WORKDIR /opt/phpcades
+# WORKDIR /opt/phpcades
 
-RUN eval `/opt/cprocsp/src/doxygen/CSP/../setenv.sh --64`; make -f Makefile.unix
-RUN ln -s /opt/phpcades/libphpcades.so /usr/local/lib/php/extensions/no-debug-non-zts-20230831/libphpcades.so
-RUN echo "extension=libphpcades.so" > /usr/local/etc/php/conf.d/docker-php-ext-libphpcades.ini
+# RUN eval `/opt/cprocsp/src/doxygen/CSP/../setenv.sh --64`; make -f Makefile.unix
+# RUN ln -s /opt/phpcades/libphpcades.so /usr/local/lib/php/extensions/no-debug-non-zts-20230831/libphpcades.so
+# RUN echo "extension=libphpcades.so" > /usr/local/etc/php/conf.d/docker-php-ext-libphpcades.ini
 
 # Установка composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer

@@ -4,9 +4,11 @@
 
 - make up
 
-- make composer-install
+# Если нам нужен laravel
 
-- cp .env.example src/.env
+- make laravel-install
+
+- make env-copy
 
 - make key-generate
 
@@ -16,15 +18,10 @@
 - up - запустить контейнеры
 - down - остановить контейнеры
 - build - пересобрать образы
-- bash-php - запустить bash внутри PHP контейнера
-- bash-php-root - запустить bash внутри PHP контейнера от имени root
 - composer-install - установить composer зависимости
 - key-generate - сгенерировать Laravel ключ
-- php - выполнить команду PHP (использование: make php cmd="artisan migrate")
-- artisan - выполнить Artisan (make artisan cmd="migrate")
-- cache-clear - очистить кеш Laravel
-- migrate - выполнить миграции Laravel
-- rollback - откатить миграции Laravel
+- bash-php - запустить bash внутри PHP контейнера
+- bash-php-root - запустить bash внутри PHP контейнера от имени root
 
 ## 🔧 Additional tools
 

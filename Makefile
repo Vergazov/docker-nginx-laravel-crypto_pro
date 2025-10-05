@@ -43,17 +43,27 @@ build: ## Пересобрать образы
 	@echo '${GREEN}Пересборка образов'
 		docker compose up -d --build
 
+# Bash в контейнере PHP
+.PHONY: bash-php
+bash-php: ## Запустить bash внутри PHP контейнера
+	@echo '${GREEN}Запуск bash нутри PHP контейнера...${RESET}'
+		docker compose exec php bash
+
 # Bash в контейнере PHP под root
 .PHONY: bash-php-root
 bash-php-root: ## Запустить bash внутри PHP контейнера
 	@echo '${GREEN}Запуск bash нутри PHP контейнера...${RESET}'
 		docker compose exec -u root php bash
 
-# Bash в контейнере PHP
-.PHONY: bash-php
-bash-php: ## Запустить bash внутри PHP контейнера
-	@echo '${GREEN}Запуск bash нутри PHP контейнера...${RESET}'
-		docker compose exec php bash
+# Установить laravel. По умолчанию последняя версия. Для установки конкретной версии необходимо передать аргумент "version"
+.PHONY: laravel-install
+laravel-install: ## Установить laravel (последнюю версию по умолчанию)
+	@echo '${GREEN}Установка laravel...${RESET}'
+ifeq ($(version),)
+	docker compose exec php composer create-project laravel/laravel . --no-scripts
+else
+	docker compose exec php composer create-project "laravel/laravel:^$(version)" . --no-scripts
+endif
 
 # Установить зависимости composer
 .PHONY: composer-install
@@ -61,42 +71,15 @@ composer-install: ## Установить composer зависимости
 	@echo '${GREEN}Установка зависимостей composer...${RESET}'
 		docker compose exec php composer install --optimize-autoloader --prefer-dist --no-dev
 
+# Скопировать .env файл 
+.PHONY: env-copy
+env-copy: ## Скопировать .env файл
+	@echo '${GREEN}Копирование .env файла...${RESET}'
+		docker compose exec php cp .env.example .env
+
 # Генерация laravel ключа
 .PHONY: key-generate
 key-generate: ## Сгенерировать Laravel ключ
 	@echo '${GREEN}Генерация ключа...${RESET}'
 		docker compose exec php php artisan key:generate
-
-# Команда для PHP (пример: make php "artisan list")
-.PHONY: php
-php: ## Выполнить команду PHP (использование: make php cmd="artisan migrate")
-	@echo '${GREEN}Выполнение PHP команды: $(cmd)${RESET}'
-	docker compose exec php php $(cmd)
-
-# Laravel Artisan
-.PHONY: artisan
-artisan: ## Выполнить Artisan (make artisan cmd="migrate")
-	@echo '${GREEN}Выполнение Artisan: $(cmd)${RESET}'
-	docker compose exec php php artisan $(cmd)
-
-# Очистка кеша Laravel
-.PHONY: cache-clear
-cache-clear: ## Очистить кеш Laravel
-	@echo '${GREEN}Очистка кеша...${RESET}'
-	docker compose exec php php artisan config:clear
-	docker compose exec php php artisan cache:clear
-	docker compose exec php php artisan route:clear
-	docker compose exec php php artisan view:clear
-
-# Накатить миграции
-.PHONY: migrate
-migrate: ## Выполнить миграции Laravel
-	@echo '${GREEN}Накатываем миграции...${RESET}'
-	docker compose exec php php artisan migrate
-
-# Откатить миграции
-.PHONY: rollback
-rollback: ## Выполнить миграции Laravel
-	@echo '${GREEN}Откатываем миграции...${RESET}'
-	docker compose exec php php artisan migrate:rollback
 
