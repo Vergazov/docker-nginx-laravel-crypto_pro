@@ -1,4 +1,4 @@
-# 🚀 nginx/laravel in Docker
+# 🚀 nginx/laravel/mysql in Docker
 
 ## 🛠️ Deploy
 
