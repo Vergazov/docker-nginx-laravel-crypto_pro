@@ -4,6 +4,14 @@
 
     make up
 
+## 🔷 If you need to work with an existing Laravel project:
+    before make up:
+        create the /src folder in the root of the project
+        make up
+        make composer-install
+        copy .env.example file
+        make key-generate
+
 ## 🔷 Install Laravel (if need):
 
     make laravel-install
@@ -25,6 +33,7 @@
 
     up - start containers
     down - stop containers
+    laravel-install - install laravel app in /src folder
     build - rebuild
     composer-install - install composer dependencies
     key-generate - generate a Laravel key
