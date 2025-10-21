@@ -7,10 +7,12 @@
 ## 🔷 If you need to work with an existing Laravel project:
     before make up:
         create the /src folder in the root of the project
+        copy your laravel project to the /src folder
         make up
         make composer-install
-        copy .env.example file
-        make key-generate
+        make bash
+        cp .env.example .env
+        php artisan key:generate
 
 ## 🔷 Install Laravel (if need):
 
