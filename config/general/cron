@@ -1,0 +1,3 @@
+# Cron use www-data with sudo, because we need to redirect logs into /dev/stdout /dev/stderr for container
+# updated by ArVergazov. Выводит лог в файл по пути var/log/'cron.log'$'\r'
+*/30 * * * * cd /var/www/html && sudo -u www-data /usr/local/bin/php artisan schedule:run >> /var/log/cron.log
