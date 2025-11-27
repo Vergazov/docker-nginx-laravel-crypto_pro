@@ -85,17 +85,6 @@ RUN echo "extension=libphpcades.so" > /usr/local/etc/php/conf.d/docker-php-ext-l
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# RUN addgroup --gid ${GID} ava
-
-# RUN adduser \
-#     --uid ${UID} \
-#     --disabled-password \
-#     --gecos "" \
-#     --ingroup ava \
-#     ava
-
-# ENV HOME=/home/ava
-
 # add supervisor
 RUN mkdir -p /var/log/supervisor
 COPY --chown=root:root ./config/general/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
