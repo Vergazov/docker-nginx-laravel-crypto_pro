@@ -11,6 +11,7 @@ services:
       - php
     networks:
       - network
+    restart: unless-stopped
 
   php: &php-template
     build:
@@ -26,6 +27,7 @@ services:
       - "host.docker.internal:host-gateway"
     networks:
       - network
+    restart: unless-stopped
   redis:
       image: redis:7-alpine
       ports:
@@ -43,6 +45,7 @@ services:
       - TZ=Europe/Moscow
     expose: []
     command: ["/usr/bin/supervisord"]
+    restart: unless-stopped
 
 
   

@@ -51,7 +51,7 @@ build: ## Rebuilding
 .PHONY: bash
 bash: ## Run bash inside a PHP container
 	@echo '${GREEN}Launching bash inside a PHP container...${RESET}'
-		docker compose exec php bash
+		docker compose exec -u www-data php bash
 
 # Bash in a PHP container as root
 .PHONY: bash-root
