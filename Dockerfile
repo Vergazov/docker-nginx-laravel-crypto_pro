@@ -35,6 +35,7 @@ RUN apt-get update && apt-get install -y \
     libpcsclite1 \ 
     libusb-1.0-0 \
     libudev1 \
+    libmagickwand-dev \
     g++ \
     mariadb-client \
     && docker-php-ext-configure gd --with-freetype --with-jpeg --with-webp \
@@ -52,9 +53,9 @@ RUN apt-get update && apt-get install -y \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
-RUN pecl install xdebug \
+RUN pecl install xdebug imagick \
     redis \
-    && docker-php-ext-enable xdebug redis \
+    && docker-php-ext-enable xdebug redis imagick\
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
 
