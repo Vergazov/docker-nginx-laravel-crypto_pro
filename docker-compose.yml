@@ -28,6 +28,7 @@ services:
     networks:
       - network
     restart: unless-stopped
+
   redis:
       image: redis:7-alpine
       ports:
@@ -41,9 +42,10 @@ services:
   supervisord:
     <<: *php-template
     container_name: supervisord
+    ports:
+      - "8081:8081"
     environment:
       - TZ=Europe/Moscow
-    expose: []
     command: ["/usr/bin/supervisord"]
     restart: unless-stopped
 
