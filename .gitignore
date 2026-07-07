@@ -1,3 +1,6 @@
 .idea/
 src/*
-src/
+!src/.cursor/
+src/.cursor/*
+!src/.cursor/skills/
+!src/.cursor/skills/**/*
